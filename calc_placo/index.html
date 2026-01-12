@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Placo Intelligent</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Calculateur de Placo</h1>
+            <p>Optimisez les découpes et réduire les chutes</p>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <div class="card site-info-card">
+                    <h2><span class="card-icon"></span> 1. Informations du Chantier</h2>
+                    <div class="site-info-grid">
+                        <div class="form-group">
+                            <label for="site-name">
+                                <span class="label-icon"></span> Nom du Chantier
+                            </label>
+                            <input type="text" id="site-name" class="input-styled" placeholder="Ex: Rénovation Maison ">
+                        </div>
+                        <div class="form-group">
+                            <label for="site-address">
+                                <span class="label-icon"></span> Adresse du Chantier
+                            </label>
+                            <input type="text" id="site-address" class="input-styled" placeholder="Ex: 8 rue Louis Lagrange ZA des Plesses 85180 LES SABLES D'OLONNE">
+                        </div>
+                        <div class="form-group">
+                            <label for="order-number">
+                                <span class="label-icon"></span> Numéro de Commande
+                            </label>
+                            <input type="text" id="order-number" class="input-styled" placeholder="Ex: CMD-2026-001">
+                        </div>
+                        <div class="form-group conduit-type-group">
+                            <label>
+                                <span class="label-icon"></span> Type de Conduit
+                            </label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="orientation" value="vertical" checked>
+                                    <span class="radio-custom"></span>
+                                    <span class="radio-label">Vertical</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="orientation" value="horizontal">
+                                    <span class="radio-custom"></span>
+                                    <span class="radio-label">Horizontal</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="promatect">
+                                <span class="label-icon"></span> PROMATECT L-500
+                            </label>
+                            <input type="text" id="promatect" class="input-styled" placeholder="Ex: PROMATECT L-500">
+                        </div>
+                        <div class="form-group">
+                            <label for="conduit-height">
+                                <span class="label-icon"></span> Hauteur du conduit
+                            </label>
+                            <input type="text" id="conduit-height" class="input-styled" placeholder="Ex: 3.50 m">
+                        </div>
+                        <div class="form-group">
+                            <label for="altimetrie">
+                                <span class="label-icon"></span> Al (altimétrie)
+                            </label>
+                            <input type="text" id="altimetrie" class="input-styled" placeholder="Ex: +2.50 m">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>2. Dimensions des Plaques</h2>
+                    <div class="form-group">
+                        <label for="plate-height">Hauteur (cm)</label>
+                        <input type="number" id="plate-height" value="250" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="plate-width">Largeur (cm)</label>
+                        <input type="number" id="plate-width" value="120" min="1">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>3.  Les côtes </h2>
+                    <h2>Si besoin de plusieurs cotes possibles d'en rajouter  </h2>
+                    <div id="walls-container">
+                        <!-- Wall inputs will be added here -->
+                    </div>
+                    <button id="add-wall-btn" class="btn secondary">+ Ajouter une nouvelle côte </button>
+                </div>
+
+                <button id="calculate-btn" class="btn primary">Calculer l'optimisation</button>
+            </section>
+
+            <section id="results-section" class="results-section hidden">
+                <div class="summary-card">
+                    <h2>Résultats</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Plaques nécessaires</span>
+                            <span class="stat-value" id="total-plates">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Surface totale</span>
+                            <span class="stat-value" id="total-area">0 m²</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Chutes</span>
+                            <span class="stat-value" id="waste-percent">0%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Surface des chutes</span>
+                            <span class="stat-value" id="waste-area">0 m²</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Surface plaques utilisées</span>
+                            <span class="stat-value" id="plates-area">0 m²</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="visualizer" class="visualizer">
+                    <!-- Visualization will be rendered here -->
+                </div>
+                <div class="actions-footer" style="margin-top: 20px; text-align: right;">
+                    <button id="export-pdf-btn" class="btn secondary">Télécharger PDF</button>
+                </div>
+            </section>
+        </main>
+        
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
