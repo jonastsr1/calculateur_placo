@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculateur de Placo </title>
+    <title>Calculateur de Placo Intelligent</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,13 +13,13 @@
     <div class="app-container">
         <header>
             <h1>Calculateur de Placo</h1>
-            <p> L'objectif est d'optimiser les plaques de placo </p>
+            <p>Optimisez vos découpes et réduisez les chutes</p>
         </header>
 
         <main>
             <section class="input-section">
                 <div class="card">
-                    <h2>1. Dimensions des Plaques : </h2>
+                    <h2>1. Dimensions des Plaques</h2>
                     <div class="form-group">
                         <label for="plate-height">Hauteur (cm)</label>
                         <input type="number" id="plate-height" value="250" min="1">
@@ -31,12 +31,11 @@
                 </div>
 
                 <div class="card">
-                    <h2>2. Les cotes  </h2>
-                    <h2>Si besoin de plusieurs cotes possibles d'en rajouter  </h2>
+                    <h2>2. Vos Murs</h2>
                     <div id="walls-container">
                         <!-- Wall inputs will be added here -->
                     </div>
-                    <button id="add-wall-btn" class="btn secondary">+ Ajouter une nouvelle cote</button>
+                    <button id="add-wall-btn" class="btn secondary">+ Ajouter un mur</button>
                 </div>
 
                 <button id="calculate-btn" class="btn primary">Calculer l'optimisation</button>
@@ -70,4 +69,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
