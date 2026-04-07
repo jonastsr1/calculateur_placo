@@ -31,6 +31,14 @@ class PlacoCalculator {
         this.conduitHeightInput = document.getElementById('conduit-height');
         this.altimetrieInput = document.getElementById('altimetrie');
 
+        // Langette inputs
+        this.langetteEnabledInput = document.getElementById('langette-enabled');
+        this.langetteHeightInput = document.getElementById('langette-height');
+        this.langetteOptions = document.getElementById('langette-options');
+
+        this.langetteEnabled = false;
+        this.langetteHeight = 20;
+
         this.currentPlates = [];
     }
 
@@ -41,6 +49,16 @@ class PlacoCalculator {
 
         this.plateHeightInput.addEventListener('change', (e) => this.plateHeight = Number(e.target.value));
         this.plateWidthInput.addEventListener('change', (e) => this.plateWidth = Number(e.target.value));
+
+        this.langetteEnabledInput.addEventListener('change', (e) => {
+            this.langetteEnabled = e.target.checked;
+            if (this.langetteEnabled) {
+                this.langetteOptions.classList.remove('hidden');
+            } else {
+                this.langetteOptions.classList.add('hidden');
+            }
+        });
+        this.langetteHeightInput.addEventListener('change', (e) => this.langetteHeight = Number(e.target.value));
     }
 
     addWall() {
@@ -123,6 +141,24 @@ class PlacoCalculator {
                         remainingHeight -= pieceHeight;
                     }
 
+                    // Langette au milieu de la pièce (additional central strip)
+                    if (this.langetteEnabled && this.langetteHeight > 0) {
+                        const wallLabel = `Mur ${wallIndex + 1}${wall.qty > 1 ? `.${q + 1}` : ''}`;
+                        let remainingLangetteHeight = this.langetteHeight;
+
+                        while (remainingLangetteHeight > 0) {
+                            const lh = Math.min(remainingLangetteHeight, this.plateHeight);
+                            pieces.push({
+                                width: pieceWidth,
+                                height: lh,
+                                wallIndex: wallIndex + 1,
+                                label: `Langette ${wallLabel}`,
+                                isLangette: true
+                            });
+                            remainingLangetteHeight -= lh;
+                        }
+                    }
+
                     remainingWidth -= pieceWidth;
                 }
             }
@@ -182,7 +218,8 @@ class PlacoCalculator {
                     y: freeRect.y,
                     w: piece.width,
                     h: piece.height,
-                    label: piece.label
+                    label: piece.label,
+                    isLangette: piece.isLangette || false
                 });
 
                 // Split the free rectangle
@@ -268,7 +305,7 @@ class PlacoCalculator {
 
         plate.usedRects.forEach(rect => {
             const el = document.createElement('div');
-            el.className = 'cut-piece';
+            el.className = rect.isLangette ? 'cut-piece langette' : 'cut-piece';
             el.style.left = (rect.x / this.plateWidth * 100) + '%';
             el.style.top = (rect.y / this.plateHeight * 100) + '%';
             el.style.width = (rect.w / this.plateWidth * 100) + '%';
@@ -307,15 +344,23 @@ class PlacoCalculator {
         // 1. PRÉPARATION DES DONNÉES (Regroupement des coupes identiques)
         // ---------------------------------------------------------
         const cutsSummary = {};
+        const langetteSummary = {};
         
         this.currentPlates.forEach(plate => {
             plate.usedRects.forEach(rect => {
                 // Créer une clé unique pour dimensions (Ex: "250x30")
                 const key = `${rect.h}x${rect.w}`;
-                if (!cutsSummary[key]) {
-                    cutsSummary[key] = { h: rect.h, w: rect.w, qty: 0 };
+                if (rect.isLangette) {
+                    if (!langetteSummary[key]) {
+                        langetteSummary[key] = { h: rect.h, w: rect.w, qty: 0 };
+                    }
+                    langetteSummary[key].qty++;
+                } else {
+                    if (!cutsSummary[key]) {
+                        cutsSummary[key] = { h: rect.h, w: rect.w, qty: 0 };
+                    }
+                    cutsSummary[key].qty++;
                 }
-                cutsSummary[key].qty++;
             });
         });
 
@@ -325,6 +370,14 @@ class PlacoCalculator {
             item.h,         // Hauteur
             item.w          // Largeur
         ]);
+
+        // Ajouter les langettes avec un séparateur si présentes
+        if (Object.keys(langetteSummary).length > 0) {
+            rowsDecoupe.push(["--- Langettes centrales ---", "", ""]);
+            Object.values(langetteSummary).forEach(item => {
+                rowsDecoupe.push([item.qty, item.h, item.w]);
+            });
+        }
 
         // Remplir avec des lignes vides pour atteindre au moins 15 lignes (look pro)
         while (rowsDecoupe.length < 15) {
@@ -411,7 +464,8 @@ class PlacoCalculator {
             body: [
                 ['PROMATECT L-500', promatectValue, ''],
                 ['Hauteur du conduit', conduitHeightValue, 'Section int. du conduit'],
-                ['Al (altimétrie)', altimetrieValue, '']
+                ['Al (altimétrie)', altimetrieValue, ''],
+                ['Langette centrale', this.langetteEnabled ? `Oui — ${this.langetteHeight} cm` : 'Non', '']
             ],
             theme: 'grid',
             headStyles: { fillColor: colors.mediumBlue, textColor: 255, fontStyle: 'bold', lineColor: colors.darkBlue, lineWidth: 0.2 },
