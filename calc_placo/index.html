@@ -100,6 +100,28 @@
                     <button id="add-wall-btn" class="btn secondary">+ Ajouter une nouvelle côte </button>
                 </div>
 
+                <div class="card langette-card">
+                    <h2>4. Langette au milieu de la pièce</h2>
+                    <div class="langette-toggle-row">
+                        <label class="toggle-option" for="langette-enabled">
+                            <input type="checkbox" id="langette-enabled">
+                            <span class="toggle-custom"></span>
+                            <span class="toggle-label">Ajouter une langette au milieu de chaque pièce</span>
+                        </label>
+                    </div>
+                    <div id="langette-options" class="langette-options hidden">
+                        <div class="form-group">
+                            <label for="langette-height">
+                                Hauteur de la langette (cm)
+                            </label>
+                            <input type="number" id="langette-height" class="input-styled" value="20" min="1" placeholder="Ex: 20">
+                        </div>
+                        <p class="langette-info">
+                            Une pièce supplémentaire (langette) sera générée au centre de chaque face, avec la hauteur indiquée.
+                        </p>
+                    </div>
+                </div>
+
                 <button id="calculate-btn" class="btn primary">Calculer l'optimisation</button>
             </section>
 

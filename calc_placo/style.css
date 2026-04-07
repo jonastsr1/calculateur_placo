@@ -396,3 +396,62 @@ input[type="number"]:focus {
     color: var(--text);
     transition: all 0.2s ease;
 }
+
+.cut-piece.langette {
+    background-color: rgba(245, 158, 11, 0.25);
+    border: 1px solid #d97706;
+    color: #92400e;
+}
+
+.cut-piece.langette:hover {
+    background-color: rgba(245, 158, 11, 0.4);
+    z-index: 10;
+}
+
+/* Section Langette */
+.langette-card {
+    border-left: 4px solid #d97706;
+}
+
+.langette-card h2 {
+    color: #92400e;
+}
+
+.langette-toggle-row {
+    margin-bottom: 1rem;
+}
+
+.toggle-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-weight: normal;
+    color: var(--text);
+}
+
+.toggle-option input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #d97706;
+    cursor: pointer;
+}
+
+.toggle-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.langette-options {
+    padding: 1rem;
+    background: rgba(245, 158, 11, 0.07);
+    border-radius: 8px;
+    border: 1px dashed #d97706;
+}
+
+.langette-info {
+    font-size: 0.8rem;
+    color: #92400e;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
